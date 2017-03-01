@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../jquery-easyui-1.5/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="../jquery-easyui-1.5/themes/default/easyui.css"/>
+    <link type="text/css" rel="stylesheet" href="../jquery-easyui-1.5/themes/icon.css"/>
+    <script src="../jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="../jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <div id="mypanel1" class="easyui-panel" title="我的panel1" style="height: 300px;width: 300px"
+            iconCls="icon-save" minimizable="true" maximizable="true" collapsible="true" closable="true">
+        我是panel1的内容
+    </div>
+
+    <div id="mypanel2">
+        我是mypanel2的内容
+    </div>
+    <script>
+        $(function(){
+            $("#mypanel2").panel({
+                title:"我是panel2的标题",
+                width:400,          //大小设置没有单位
+                height:400,
+                iconCls:"icon-edit",
+                minimizable:true,
+                maximizable:true,
+                collapsible:true,   //折叠
+                closable:true,      //关闭
+                tools:[{
+                    iconCls:"icon-add",
+                    handler: function () {
+                        $.messager.alert("标题",'添加啦',"success")
+                    }
+                },{
+                    iconCls:"icon-save",
+                    handler: function () {
+                        $.messager.show({
+                            title:"保存标题",
+                            msg:"保存拉"
+                        })
+                    }
+                }]
+            })
+        })
+
+    </script>
+</body>
+</html>

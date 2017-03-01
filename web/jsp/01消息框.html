@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../jquery-easyui-1.5/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="../jquery-easyui-1.5/themes/default/easyui.css"/>
+    <link type="text/css" rel="stylesheet" href="../jquery-easyui-1.5/themes/icon.css"/>
+    <script src="../jquery-easyui-1.5/jquery.easyui.min.js"></script>
+    <script src="../jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <script>
+        $(function(){
+            //显示在右下角
+            $.messager.show({
+                msg:'我是内容',
+                title:'我是标题'
+            });
+
+
+            //确认框
+            $.messager.confirm("标题","是否确认", function (flag) {
+                if(flag){
+                    $.messager.alert("title","点击确认了","error");//参数分别是标题,内容,提示图片
+                }else{
+                    alert("点击取消了")
+                }
+            })
+
+            //输入框
+            $.messager.prompt("标题","请输入内容", function (val) {
+                alert(val);
+            })
+
+            //进度消息框
+            $.messager.progress({
+                title:"我是标题",
+                msg:"我是进度条",
+                text:"我是进度条里的文本",
+                interval:1000       //定时器.
+            })
+        })
+
+    </script>
+</body>
+</html>
