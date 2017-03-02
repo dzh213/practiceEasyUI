@@ -48,7 +48,6 @@ public class UserServlet extends HttpServlet {
 
         for (City city : citys) {
             if(city.getId() == id){
-                System.out.print("aa");
                 response.setContentType("text/html;charset=utf-8");
                 response.getWriter().write(JSONObject.fromObject(city).toString());
             }
@@ -94,6 +93,7 @@ public class UserServlet extends HttpServlet {
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
         String description = request.getParameter("description");
+        String city = request.getParameter("city");
 
         User user = new User();
         user.setUsername(username);
@@ -105,6 +105,7 @@ public class UserServlet extends HttpServlet {
         user.setStartTime(startTime);
         user.setEndTime(endTime);
         user.setDescription(description);
+        user.setCity(Integer.parseInt(city));
 
         try {
             userDao.save(user);
