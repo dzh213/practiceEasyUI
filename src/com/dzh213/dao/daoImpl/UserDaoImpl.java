@@ -20,6 +20,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
     @Override
     public List<User> findByPagination(int currentPage, int pageSize) throws Exception {
         Connection conn = DBUtil.createConn();
+        //sql语句根据当前页第一条的索引和当前页的个数进行查询,索引从0开始
         String sql = "select *from user limit "+(currentPage-1)*pageSize+","+pageSize;
         PreparedStatement ps = DBUtil.getPs(conn,sql);
         ResultSet rs = ps.executeQuery();

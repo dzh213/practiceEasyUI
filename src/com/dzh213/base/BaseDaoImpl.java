@@ -57,12 +57,38 @@ public class BaseDaoImpl<Entity> implements BaseDao<Entity> {
 
     @Override
     public void update(Entity obj) throws Exception {
+        Connection connection = DBUtil.createConn();
+        String sql = "update "+clazz.getSimpleName()+" set ";
+        Field[] fields = clazz.getDeclaredFields();
+        //获取字段从索引1开始,因为0号位是id,不需要更新
+        for (int i = 1; i < fields.length; i++) {
+            sql += fields[i].getName()+"=?,";
+        }
+        //截取最后一个逗号
+        sql = sql.substring(0,sql.length()-1)+" where id=?";
+        PreparedStatement ps = DBUtil.getPs(connection,sql);
+        //这里i也是从1开始
+        for (int i = 1; i < fields.length; i++) {
+            String methodName = "get"+Character.toUpperCase(fields[i].getName().charAt(0))+fields[i].getName().substring(1);
+            Method method = clazz.getMethod(methodName);
+            ps.setObject(i,method.invoke(obj)); //根据索引位填充?
+        }
+        Method method2 = clazz.getMethod("getId");
+        ps.setInt(fields.length,(Integer)method2.invoke(obj));//id是int类型的,别忘了强制转换,并且使用setInt方法
 
+        ps.executeUpdate(); //执行更新
+        DBUtil.close(ps);
+        DBUtil.close(connection);
     }
 
     @Override
     public void delete(int id) throws Exception {
-
+        Connection connection = DBUtil.createConn();
+        String sql = "delete from "+clazz.getSimpleName()+" where id="+id;
+        PreparedStatement ps = DBUtil.getPs(connection,sql);
+        ps.executeUpdate(sql);//注意这里和update方法的区别
+        DBUtil.close(ps);
+        DBUtil.close(connection);
     }
 
     @Override
@@ -99,7 +125,23 @@ public class BaseDaoImpl<Entity> implements BaseDao<Entity> {
 
     @Override
     public Entity findById(int id) throws Exception {
-        return null;
+        Connection connection = DBUtil.createConn();
+        String sql = "select * from "+clazz.getSimpleName()+" where id="+id;
+        PreparedStatement ps = DBUtil.getPs(connection,sql);
+        ResultSet rs = ps.executeQuery();
+        Entity entity = (Entity) clazz.newInstance();
+        if(rs.next()){
+            Field[] field = clazz.getDeclaredFields();
+            for (int i = 0; i < field.length ; i++) {
+                String methodName = "set"+Character.toUpperCase(field[i].getName().charAt(0))+field[i].getName().substring(1);
+                Method method = clazz.getDeclaredMethod(methodName,field[i].getType());
+                method.invoke(entity,rs.getObject(field[i].getName()));
+            }
+        }
+        DBUtil.close(rs);
+        DBUtil.close(ps);
+        DBUtil.close(connection);
+        return entity;
     }
 }
 

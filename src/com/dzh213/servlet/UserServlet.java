@@ -35,8 +35,25 @@ public class UserServlet extends HttpServlet {
             getList(request,response);
         }else if ("getListName".equals(method)){
             getListName(request,response);
+        }else if ("update".equals(method)){
+            update(request, response);
+        }else if("delete".equals(method)){
+            delete(request, response);
         }
     }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response) {
+        String ids = request.getParameter("ids");
+        String[] idArray = ids.split(",");
+        for (int i = 0;i<idArray.length;i++){
+            try {
+                userDao.delete(Integer.parseInt(idArray[i]));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void getListName(HttpServletRequest request, HttpServletResponse response) throws IOException {
         List<City> citys = new ArrayList<City>();
@@ -58,6 +75,7 @@ public class UserServlet extends HttpServlet {
     private void getList(HttpServletRequest request, HttpServletResponse response) {
         try {
           //  List<User> users = userDao.findAll();
+            //分页组件异步发送page和rows参数
             int currentPage = Integer.parseInt(request.getParameter("page"));
             int pageSize = Integer.parseInt(request.getParameter("rows"));
             List<User> users = userDao.findByPagination(currentPage,pageSize);
@@ -125,6 +143,54 @@ public class UserServlet extends HttpServlet {
                 e1.printStackTrace();
             }
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用户修改
+     * @param request
+     * @param response
+     */
+    private void update(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            String sex = request.getParameter("sex");
+            String age = request.getParameter("age");
+            String birthday = request.getParameter("birthday");
+            String salary = request.getParameter("salary");
+            String startTime = request.getParameter("startTime");
+            String endTime = request.getParameter("endTime");
+            String description = request.getParameter("description");
+            String city = request.getParameter("city");
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            User user = userDao.findById(id);
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setSex(sex);
+            user.setAge(Integer.parseInt(age));
+            user.setBirthday(birthday);
+            user.setSalary(salary);
+            user.setStartTime(startTime);
+            user.setEndTime(endTime);
+            user.setDescription(description);
+            user.setCity(Integer.parseInt(city));
+
+            userDao.update(user);
+
+            response.setContentType("text/html;charset=utf-8");
+            String str = "{\"status\":\"ok\",\"message\":\"操作成功\"}";
+            response.getWriter().write(str);
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setContentType("text/htlm;charset=utf-8");
+            String str2 = "{\"status\":\"fail\",\"message\":\"操作失败\"}";
+            try {
+                response.getWriter().write(str2);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
