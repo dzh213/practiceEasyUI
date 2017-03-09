@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by donghao on 2016/10/31.
@@ -78,7 +80,23 @@ public class UserServlet extends HttpServlet {
             //分页组件异步发送page和rows参数
             int currentPage = Integer.parseInt(request.getParameter("page"));
             int pageSize = Integer.parseInt(request.getParameter("rows"));
-            List<User> users = userDao.findByPagination(currentPage,pageSize);
+
+            //条件查询
+            String username = request.getParameter("username") == null?"":request.getParameter("username");
+            String startTime = request.getParameter("startTime") == null?"":request.getParameter("startTime");
+            String endTime = request.getParameter("endTime") == null?"":request.getParameter("endTime");
+            String order = request.getParameter("order") == null?"":request.getParameter("order");
+            String sort = request.getParameter("sort") == null?"":request.getParameter("sort");
+
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put("username",username);
+            map.put("startTime",startTime);
+            map.put("endTime",endTime);
+            map.put("order",order);
+            map.put("sort",sort);
+
+
+            List<User> users = userDao.findByPagination(currentPage,pageSize,map);
             int total = userDao.getTotal();
             response.setContentType("text/html;charset=utf-8");
             //{"total":10,"rows":[{},{}]}

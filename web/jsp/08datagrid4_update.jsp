@@ -26,6 +26,7 @@
          *      datagrid的索引
          *      能够跨页删除的保障
          *  6.将删除的所有id拼成字符串,传输给后台
+         *  7.datagrid中unselectAll方法的使用,清空idField
          */
 
         var flag;   //用于区分同一按钮使用增删改查的功能
@@ -235,6 +236,9 @@
                                 $.post("../UserServlet?method=delete",{ids:ids}, function (result) {
                                     //请求成功,刷新页面
                                     $("#mydata").datagrid("reload");
+                                    //选中的数据虽然删除了,但是选中的idField还会保存在内存中,所以要清空idField.
+                                    //然后再做其他操作,才会不影响
+                                    $("#mydata").datagrid("unselectAll");
                                     $.messager.show({
                                         title:"提示",
                                         msg:"操作成功"
