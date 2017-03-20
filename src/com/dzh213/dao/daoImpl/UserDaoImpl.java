@@ -110,7 +110,29 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
     }
 
     @Override
+    //根据名字查询记录
     public List<User> searchByName(String q) throws Exception {
-        return null;
+        Connection connection = DBUtil.createConn();
+        String sql = "select *from user where username like '%"+q+"%'";
+        PreparedStatement ps = DBUtil.getPs(connection,sql);
+        ResultSet rs = ps.executeQuery();
+        List<User> users = new ArrayList<User>();
+        while (rs.next()){
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setAge(rs.getInt("age"));
+            user.setSalary(rs.getString("salary"));
+            user.setBirthday(rs.getString("birthday"));
+            user.setCity(rs.getInt("city"));
+            user.setSex(rs.getString("sex"));
+            user.setStartTime(rs.getString("startTime"));
+            user.setEndTime(rs.getString("endTime"));
+            user.setDescription(rs.getString("description"));
+
+            users.add(user);
+        }
+        return users;
     }
 }

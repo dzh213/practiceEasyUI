@@ -43,6 +43,21 @@ public class UserServlet extends HttpServlet {
             update(request, response);
         }else if("delete".equals(method)){
             delete(request, response);
+        }else if ("searchName".equals(method)){
+            searchName(request,response);
+        }
+    }
+
+    //自动搜索
+    private void searchName(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String q = request.getParameter("q");
+            List<User> userList = userDao.searchByName(q);
+
+            response.setContentType("text/html;charset=utf-8");
+            response.getWriter().write(JSONArray.fromObject(userList).toString());
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

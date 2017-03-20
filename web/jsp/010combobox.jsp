@@ -24,6 +24,7 @@
                     在onSlect方法中使用getValue和getText方法,获取不到最新的选择项,
                     即只有onSelect方法执行完毕后,dom对象才刷新,无法获取到id.
                     所以使用带参数的onSelect方法,param参数就是当前选择的对象,可从中取出在combobox中定义的valueField,textField字段的值
+                4.mode为remote时,发送key值为q,value为文本内容的请求
             -->
 <script>
     window.onload = function(){
@@ -37,12 +38,22 @@
                 $("#sel_2").combobox("reload","../ProvinceServlet?method=getCity&pid="+pid);
             }
         })
+
+        //自动搜索
+        $("#search").combobox({
+            mode:"remote", //定义在文本改变时如何加载列表数据
+                                //设置为 'remote' 模式时，用户输入的值将会被作为名为 'q' 的 http 请求参数发送到服务器，以获取新的数据。
+            url:"../UserServlet?method=searchName",
+            valueField:"id",
+            textField:"username"
+        })
     }
 </script>
 
 <select id="sel_1" class="easyui-combobox" url="../ProvinceServlet?method=getPro" valueField="id" textField="name" style="width: 80px"></select>
 <select id="sel_2" class="easyui-combobox" valueField="id" textField="city" style="width: 80px"></select>
-
+<br/>
+自动搜索:<input id="search"/>
 
 </body>
 </html>
