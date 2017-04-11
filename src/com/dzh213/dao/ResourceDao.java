@@ -11,5 +11,9 @@ import java.util.List;
  */
 public interface ResourceDao extends BaseDao<Resource> {
 
+    //根据父节点id获取所有子节点,子节点对象使用数据转换对象treeDto
     List<TreeDTO> getChildrenByParentId(String id) throws Exception;
+
+    //根据父节点id获取所有的子节点
+    List<Resource> getChildren(int id) throws Exception;
 }
